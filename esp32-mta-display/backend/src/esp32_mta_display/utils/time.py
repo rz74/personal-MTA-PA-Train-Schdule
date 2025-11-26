@@ -1,6 +1,14 @@
 """Time-related helpers for arrival calculations."""
 
-from datetime import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
+
+
+def utc_now() -> datetime:
+    """Return timezone-aware UTC now."""
+
+    return datetime.now(timezone.utc)
 
 
 def minutes_until(target: datetime, now: datetime | None = None) -> int:
@@ -11,6 +19,6 @@ def minutes_until(target: datetime, now: datetime | None = None) -> int:
     """
 
     if now is None:
-        now = datetime.utcnow()
+        now = utc_now()
     delta = target - now
     return int(delta.total_seconds() // 60)

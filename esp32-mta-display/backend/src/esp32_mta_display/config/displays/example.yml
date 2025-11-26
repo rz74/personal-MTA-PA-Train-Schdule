@@ -2,12 +2,38 @@
 # Each display id will map to one of these profiles.
 
 display_id: "example"
+
+# Legacy top-level fields remain for backward compatibility.
 station_id: "123N"
 lines:
   - "1"
   - "2"
   - "3"
+mta_feed_url: "https://api.mta.info/TrainTime/gtfs-rt/1"
+
+mta:
+  feed_url: "https://api.mta.info/TrainTime/gtfs-rt/1"
+  station_id: "123N"
+  lines:
+    - "1"
+    - "2"
+    - "3"
+
+path:
+  feed_url: "https://path.example.com/gtfs"
+  station_id: "33RD"
+  lines:
+    - "HOB_33"
+    - "JSQ_33"
+
 layout:
   width: 240
   height: 320
   title: "Times Sq - 42 St"
+
+template:
+  background: "#000000"
+  text_color: "#00FF00"
+  font_size: 16
+  max_rows: 6
+  row_spacing: 4

@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.env
+.venv
+venv/
+.env*/
+.mypy_cache/
+.pytest_cache/
+*.log
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Arduino / ESP32
+*.bin
+*.elf
+*.hex
+.build/
+.pio/
+*.pioenvs
+*.eps
+*.lst
+*.lss
+*.map
+*.srec
+*.dSYM/

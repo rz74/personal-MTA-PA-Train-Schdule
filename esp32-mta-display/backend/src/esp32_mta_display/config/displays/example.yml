@@ -1,0 +1,13 @@
+# Example display configuration
+# Each display id will map to one of these profiles.
+
+display_id: "example"
+station_id: "123N"
+lines:
+  - "1"
+  - "2"
+  - "3"
+layout:
+  width: 240
+  height: 320
+  title: "Times Sq - 42 St"

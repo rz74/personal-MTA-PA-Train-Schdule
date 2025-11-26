@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "esp32-mta-display-backend"
+version = "0.1.0"
+description = "FastAPI backend for ESP32 MTA display"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Your Name" }
+]
+
+dependencies = [
+  "fastapi>=0.110.0",
+  "uvicorn[standard]",
+  "httpx>=0.27.0",
+  "Pillow>=10.0.0",
+  "protobuf>=4.25.0",
+  "gtfs-realtime-bindings>=1.0.0",
+  "PyYAML>=6.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "isort",
+  "mypy",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourname/esp32-mta-display"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

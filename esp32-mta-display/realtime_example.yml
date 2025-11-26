@@ -1,0 +1,10 @@
+stations:
+  - type: "MTA"
+    station_id: "123N"
+    lines:
+      - "1"
+      - "2"
+  - type: "PATH"
+    station_id: "33"
+    lines:
+      - "JSQ-33"

@@ -3,16 +3,14 @@
 
 display_id: "example"
 
-# Legacy top-level fields remain for backward compatibility.
+# Legacy top-level fields remain for backward compatibility with older configs.
 station_id: "123N"
 lines:
   - "1"
   - "2"
   - "3"
-mta_feed_url: "https://api.mta.info/TrainTime/gtfs-rt/1"
 
 mta:
-  feed_url: "https://api.mta.info/TrainTime/gtfs-rt/1"
   station_id: "123N"
   lines:
     - "1"
@@ -20,11 +18,9 @@ mta:
     - "3"
 
 path:
-  feed_url: "https://path.example.com/gtfs"
-  station_id: "33RD"
+  station_id: "33"
   lines:
-    - "HOB_33"
-    - "JSQ_33"
+    - "JSQ-33"
 
 layout:
   width: 240

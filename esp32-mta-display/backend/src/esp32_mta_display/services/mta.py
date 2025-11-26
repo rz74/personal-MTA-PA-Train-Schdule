@@ -51,7 +51,7 @@ def parse_mta_feed(
             continue
 
         arrival_time = datetime.fromtimestamp(timestamp, tz=timezone.utc)
-        destination = trip_update.trip.trip_headsign or trip_update.trip.route_id or "Unknown"
+        destination = getattr(trip_update.trip, "trip_headsign", "") or trip_update.trip.route_id or "Unknown"
 
         arrivals.append(
             Arrival(

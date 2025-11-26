@@ -1,0 +1,12 @@
+feed_type,route,feed_url
+MTA,ACE,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace
+MTA,BDFM,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-bdfm
+MTA,G,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-g
+MTA,JZ,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-jz
+MTA,NQRW,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw
+MTA,L,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l
+MTA,1234567S,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs
+MTA,SIR,https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-si
+PATH,JSQ-33,https://path.transitdata.nyc/gtfsrt
+PATH,HOB-33,https://path.transitdata.nyc/gtfsrt
+PATH,NWK-WTC,https://path.transitdata.nyc/gtfsrt

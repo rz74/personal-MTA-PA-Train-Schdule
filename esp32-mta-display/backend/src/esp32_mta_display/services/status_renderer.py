@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, List, Mapping, Sequence
 
+from esp32_mta_display.services import alias_resolver
+
 DEFAULT_HEADER_PREFIX = "# generated at "
 
 
@@ -20,7 +22,7 @@ def _coerce_minutes(value) -> int | None:
 def format_status_entry(entry: Mapping[str, object]) -> str:
     """Return a single human-friendly status line."""
 
-    station = (entry.get("station") or "").strip() or "Unknown station"
+    station = _resolve_station_label(entry)
     line = (entry.get("line") or "").strip()
     minutes = _coerce_minutes(entry.get("minutes"))
     destination = (entry.get("destination") or "").strip()
@@ -78,3 +80,18 @@ def write_status_file(
     contents = "\n".join(lines) + "\n"
     path.write_text(contents, encoding="utf-8")
     return path
+
+
+def _resolve_station_label(entry: Mapping[str, object]) -> str:
+    station_type = entry.get("station_type")
+    if not isinstance(station_type, str):
+        station_type = None
+    station_id = entry.get("station_id")
+    if not isinstance(station_id, str):
+        station_id = None
+    fallback = (
+        (entry.get("station_label") or "")
+        or (entry.get("station_alias") or "")
+        or (entry.get("station") or "")
+    )
+    return alias_resolver.canonical_to_human(station_type, station_id, fallback)

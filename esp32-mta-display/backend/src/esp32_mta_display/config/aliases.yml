@@ -1,0 +1,51 @@
+# Human → canonical station ID mapping
+aliases:
+  grove: "PATH:33"
+  grove_st: "PATH:33"
+  grove_street: "PATH:33"
+  grove-st: "PATH:33"
+
+  wtc:
+    PATH: "PATH:WTC"
+    MTA: "MTA:137S"
+  world_trade:
+    PATH: "PATH:WTC"
+    MTA: "MTA:137S"
+  world_trade_center:
+    PATH: "PATH:WTC"
+    MTA: "MTA:137S"
+  1wtc:
+    PATH: "PATH:WTC"
+    MTA: "MTA:137S"
+  wtc_path: "PATH:WTC"
+  wtc_mta: "MTA:137S"
+
+  cortlandt: "MTA:137S"
+  cortlandt_st: "MTA:137S"
+  cortlandt_street: "MTA:137S"
+  chambers: "MTA:137S"
+  chambers_st: "MTA:137S"
+  park_place: "MTA:138S"
+  park-place: "MTA:138S"
+  rector: "MTA:130S"
+  rector_st: "MTA:130S"
+  rector_street: "MTA:130S"
+
+  23: "MTA:123N"
+  23_st: "MTA:F23N"
+  23rd: "MTA:F23N"
+
+canonical_names:
+  PATH:33: "Grove Street"
+  PATH:HOB: "Hoboken"
+  PATH:WTC: "World Trade Center"
+  PATH:JSQ: "Journal Square"
+
+  MTA:123N: "Times Sq - 42 St"
+  MTA:F23N: "23 St"
+  MTA:137S: "World Trade Center"
+  MTA:137N: "World Trade Center"
+  MTA:138S: "Park Place"
+  MTA:138N: "Park Place"
+  MTA:130S: "Rector Street"
+  MTA:130N: "Rector Street"

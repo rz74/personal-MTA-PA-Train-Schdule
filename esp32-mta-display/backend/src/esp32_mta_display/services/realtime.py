@@ -6,7 +6,7 @@ import logging
 from typing import Callable, Dict, Iterable, List, Sequence, Union
 
 from esp32_mta_display.models.arrivals import Arrival
-from esp32_mta_display.services import feed_selector, mta, path
+from esp32_mta_display.services import alias_resolver, feed_selector, mta, path
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +24,22 @@ def get_realtime_arrivals(stations_and_lines: List[Dict]) -> Dict[str, ArrivalRe
     for entry in entries:
         entry_type = _normalize_type(entry.get("type"))
         station_id = (entry.get("station_id") or "").strip()
+        alias_source = entry.get("station_alias") or entry.get("station")
         lines = _normalize_lines(entry.get("lines"))
-        key = f"{entry_type or 'UNKNOWN'}:{station_id or 'UNKNOWN'}"
+
+        if alias_source and (not entry_type or not station_id):
+            preferred_type = _infer_type_from_lines(lines)
+            try:
+                resolved_type, resolved_station = alias_resolver.resolve_station_with_type(
+                    alias_source, preferred_type
+                )
+            except ValueError:
+                resolved_type = resolved_station = None
+            else:
+                entry_type = entry_type or resolved_type
+                station_id = station_id or resolved_station
+
+        key = f"{entry_type or 'UNKNOWN'}:{station_id or alias_source or 'UNKNOWN'}"
 
         if not entry_type or not station_id or not lines:
             results[key] = "NO_FEED"
@@ -62,6 +76,16 @@ def _normalize_lines(lines: Iterable[str] | None) -> List[str]:
     if not lines:
         return []
     return [line.strip().upper() for line in lines if line and line.strip()]
+
+
+def _infer_type_from_lines(lines: List[str]) -> str | None:
+    if not lines:
+        return None
+    for line in lines:
+        token = line.upper()
+        if "-" in token or token in {"JSQ-33", "HOB-33", "HOB-WTC", "NWK-WTC", "NWK_WTC", "JSQ-HOB"}:
+            return "PATH"
+    return "MTA"
 
 
 def _select_feed(entry_type: str, lines: List[str]) -> str | None:

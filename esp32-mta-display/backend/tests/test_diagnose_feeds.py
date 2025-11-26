@@ -1,3 +1,5 @@
+"""Integration test for diagnose_feeds; disabled by default unless opted in."""
+
 import os
 import subprocess
 import sys
@@ -6,9 +8,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "diagnose_feeds.py"
+RUN_LIVE_FEEDS = os.getenv("RUN_LIVE_FEED_TESTS") == "1"
 
 
-@unittest.skipUnless(os.getenv("RUN_LIVE_FEED_TESTS") == "1", "Live feed test disabled")
+@unittest.skipUnless(RUN_LIVE_FEEDS, "Set RUN_LIVE_FEED_TESTS=1 to enable live feed integration tests")
 class DiagnoseFeedsTests(unittest.TestCase):
     def test_diagnose_script_outputs_keys(self) -> None:
         proc = subprocess.run(

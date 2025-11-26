@@ -15,16 +15,32 @@ BACKEND_SRC = ROOT / "backend" / "src"
 if str(BACKEND_SRC) not in sys.path:
     sys.path.insert(0, str(BACKEND_SRC))
 
-from esp32_mta_display.services import status_compiler, status_renderer  # type: ignore[import]
+from esp32_mta_display.services import alias_resolver, status_compiler, status_renderer  # type: ignore[import]
 
 DEFAULT_REQUESTS = [
-    {"type": "MTA", "station": "23 St", "line": "F"},
-    {"type": "PATH", "station": "33rd Street", "line": "JSQ-33"},
+    {"station": "23", "line": "F"},
+    {"station": "grove", "line": "JSQ-33"},
 ]
 
 SAMPLE_STATUSES = [
-    {"station": "23 St", "line": "F", "minutes": 4, "destination": "Downtown"},
-    {"station": "33rd Street", "line": "JSQ-33", "minutes": None, "destination": ""},
+    {
+        "station": "23",
+        "station_alias": "23",
+        "station_type": "MTA",
+        "station_id": "F23N",
+        "line": "F",
+        "minutes": 4,
+        "destination": "Downtown",
+    },
+    {
+        "station": "grove",
+        "station_alias": "grove",
+        "station_type": "PATH",
+        "station_id": "33",
+        "line": "JSQ-33",
+        "minutes": None,
+        "destination": "",
+    },
 ]
 
 
@@ -90,15 +106,20 @@ def main() -> int:
     if args.sample_output:
         statuses = SAMPLE_STATUSES
     else:
+        enriched = _inject_alias_metadata(requests)
         try:
-            statuses = status_compiler.compile_realtime_status(requests)
+            statuses = status_compiler.compile_realtime_status(enriched)
         except Exception as exc:  # pragma: no cover - realtime safety
             parser.error(f"Realtime compiler failed: {exc}")
+
+    include_timestamp = not args.no_timestamp
+    rendered_lines = status_renderer.render_status_lines(statuses, include_timestamp=include_timestamp)
+    print("\n".join(rendered_lines))
 
     output_path = status_renderer.write_status_file(
         args.output,
         statuses,
-        include_timestamp=not args.no_timestamp,
+        include_timestamp=include_timestamp,
     )
 
     print(f"Wrote {len(statuses)} status rows to {output_path}")
@@ -107,3 +128,23 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def _inject_alias_metadata(requests: List[dict]) -> List[dict]:
+    enriched: List[dict] = []
+    for entry in requests:
+        if not isinstance(entry, dict):
+            continue
+        normalized = dict(entry)
+        station_alias = (normalized.get("station") or "").strip()
+        preferred_type = normalized.get("type")
+        if station_alias:
+            try:
+                resolved_type, resolved_station = alias_resolver.resolve_station_with_type(station_alias, preferred_type)
+            except ValueError:
+                pass
+            else:
+                normalized.setdefault("type", resolved_type)
+                normalized.setdefault("station_id", resolved_station)
+        enriched.append(normalized)
+    return enriched

@@ -5,6 +5,7 @@ from esp32_mta_display.services.feed_selector import find_mta_feed, find_path_fe
 ACE_FEED = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-ace"
 MAIN_FEED = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs"
 NQRW_FEED = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-nqrw"
+BDFM_FEED = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-bdfm"
 PATH_FEED = "https://path.transitdata.nyc/gtfsrt"
 
 
@@ -15,14 +16,23 @@ class FeedSelectorTests(unittest.TestCase):
     def test_find_mta_feed_for_main_lines(self) -> None:
         self.assertEqual(find_mta_feed(["1", "7"]), MAIN_FEED)
 
+    def test_find_mta_feed_for_core_express_group(self) -> None:
+        self.assertEqual(find_mta_feed(["1", "2", "3"]), MAIN_FEED)
+
     def test_find_mta_feed_for_q(self) -> None:
         self.assertEqual(find_mta_feed(["Q"]), NQRW_FEED)
+
+    def test_find_mta_feed_for_f(self) -> None:
+        self.assertEqual(find_mta_feed(["F"]), BDFM_FEED)
 
     def test_find_path_feed_jsq(self) -> None:
         self.assertEqual(find_path_feed(["JSQ-33"]), PATH_FEED)
 
     def test_find_path_feed_nwk(self) -> None:
         self.assertEqual(find_path_feed(["NWK-WTC"]), PATH_FEED)
+
+    def test_find_path_feed_hoboken_wtc(self) -> None:
+        self.assertEqual(find_path_feed(["HOB-WTC"]), PATH_FEED)
 
 
 if __name__ == "__main__":

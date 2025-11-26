@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Dict, Iterable, List
 
-from esp32_mta_display.services import realtime
+from esp32_mta_display.services import alias_resolver, realtime
 from esp32_mta_display.utils import time as time_utils
 
 PATH_STATION_NAME_MAP = {
@@ -60,12 +60,17 @@ def compile_realtime_status(pairs: List[dict]) -> List[dict]:
         station_name = (pair.get("station") or "").strip()
         line_name = (pair.get("line") or "").strip()
 
-        station_id = _resolve_station_id(type_code, station_name)
+        alias_type, alias_station_id = _resolve_alias_station(station_name, type_code)
+        if alias_type and not type_code:
+            type_code = alias_type
+
+        station_id = (pair.get("station_id") or "").strip() or alias_station_id or _resolve_station_id(type_code, station_name)
         line_token = _normalize_line_token(line_name)
         arrival_match = _resolve_arrival_line_match(type_code, line_token)
 
         entry = {
             "station": station_name,
+            "station_alias": station_name,
             "line": line_name,
             "type": type_code,
             "station_id": station_id,
@@ -95,6 +100,9 @@ def compile_realtime_status(pairs: List[dict]) -> List[dict]:
 
         status = {
             "station": entry["station"],
+            "station_alias": entry["station_alias"],
+            "station_type": type_code,
+            "station_id": station_id,
             "line": entry["line"],
             "minutes": None,
             "destination": None,
@@ -156,3 +164,12 @@ def _find_matching_arrival(arrivals: Iterable, match_line: str | None):
             continue
         return arrival
     return None
+
+
+def _resolve_alias_station(station_name: str, preferred_type: str | None) -> tuple[str | None, str | None]:
+    if not station_name:
+        return None, None
+    try:
+        return alias_resolver.resolve_station_with_type(station_name, preferred_type)
+    except ValueError:
+        return None, None
